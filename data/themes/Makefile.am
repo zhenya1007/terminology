@@ -11,6 +11,7 @@ EDJE_FLAGS = $(EDJE_FLAGS_VERBOSE_$(V)) -id $(top_srcdir)/data/themes/images -fd
 filesdir = $(pkgdatadir)/themes
 files_DATA = \
 default.edj \
+default-spin.edj \
 mild.edj \
 black.edj \
 solarized.edj \
@@ -22,17 +23,20 @@ am__v_EDJ_ = $(am__v_EDJ_$(AM_DEFAULT_VERBOSITY))
 am__v_EDJ_0 = @echo "  EDJ   " $@;
 
 
-EXTRA_DIST = default.edc mild.edc black.edc mustang.edc default_colors.in.edc
+EXTRA_DIST = default.edc default-spin.edc mild.edc black.edc mustang.edc default_colors.in.edc
 
 default.edj: Makefile default.edc default_colors.in.edc
 	$(AM_V_EDJ)$(EDJE_CC) $(EDJE_FLAGS) \
 	$(top_srcdir)/data/themes/default.edc \
 	$(top_builddir)/data/themes/default.edj
 
+default-spin.edj: Makefile default-spin.edc default_colors.in.edc
+	$(AM_V_EDJ)$(EDJE_CC) $(EDJE_FLAGS) \
+	$(top_srcdir)/data/themes/default-spin.edc \
+	$(top_builddir)/data/themes/default-spin.edj
+
 mild.edj: Makefile mild.edc default_colors.in.edc
 	$(AM_V_EDJ)$(EDJE_CC) $(EDJE_FLAGS) \
-	$(top_srcdir)/data/themes/mild.edc \
-	$(top_builddir)/data/themes/mild.edj
 
 black.edj: Makefile black.edc mild.edc default_colors.in.edc
 	$(AM_V_EDJ)$(EDJE_CC) $(EDJE_FLAGS) \

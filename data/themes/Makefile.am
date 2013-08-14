@@ -11,6 +11,7 @@ EDJE_FLAGS = $(EDJE_FLAGS_VERBOSE_$(V)) -id $(top_srcdir)/data/themes/images -fd
 filesdir = $(pkgdatadir)/themes
 files_DATA = \
 default.edj \
+default-dino.edj \
 default-nausea.edj \
 default-spin.edj \
 mild.edj \
@@ -24,7 +25,7 @@ am__v_EDJ_ = $(am__v_EDJ_$(AM_DEFAULT_VERBOSITY))
 am__v_EDJ_0 = @echo "  EDJ   " $@;
 
 
-EXTRA_DIST = default.edc default-spin.edc default-nausea.edc mild.edc black.edc mustang.edc default_colors.in.edc
+EXTRA_DIST = default.edc default-spin.edc default-nausea.edc default-dino.edc mild.edc black.edc mustang.edc default_colors.in.edc
 
 default.edj: Makefile default.edc default_colors.in.edc
 	$(AM_V_EDJ)$(EDJE_CC) $(EDJE_FLAGS) \
@@ -40,6 +41,11 @@ default-nausea.edj: Makefile default-nausea.edc default_colors.in.edc
 	$(AM_V_EDJ)$(EDJE_CC) $(EDJE_FLAGS) \
 	$(top_srcdir)/data/themes/default-nausea.edc \
 	$(top_builddir)/data/themes/default-nausea.edj
+
+default-dino.edj: Makefile default-dino.edc default_colors.in.edc
+	$(AM_V_EDJ)$(EDJE_CC) $(EDJE_FLAGS) \
+	$(top_srcdir)/data/themes/default-dino.edc \
+	$(top_builddir)/data/themes/default-dino.edj
 
 mild.edj: Makefile mild.edc default_colors.in.edc
 	$(AM_V_EDJ)$(EDJE_CC) $(EDJE_FLAGS) \

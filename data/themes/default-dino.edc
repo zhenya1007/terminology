@@ -1,83 +1,6 @@
 collections {
-   
-//////////////////////////////////////////////////////////////////////////////
-   //// the background and general container for the terminal
-   group { name: "terminology/core";
-      parts {
-         ////////////////////////////////////////////////////////////////////
-         // background handling
-         part { name: "fade"; type: RECT;
-            description { state: "default" 0.0;
-            }
-            description { state: "translucent" 0.0;
-               inherit: "default" 0.0;
-               color: 255 255 255 128;
-            }
-         }
-         program {
-            signal: "translucent,on"; source: "terminology";
-            action: STATE_SET "translucent" 0.0;
-            target: "fade";
-         }
-         program {
-            signal: "translucent,off"; source: "terminology";
-            action: STATE_SET "default" 0.0;
-            target: "fade";
-         }
-         part { name: "terminology.background"; type: SWALLOW;
-            clip_to: "fade";
-            description { state: "default" 0.0;
-            }
-            description { state: "image" 0.0;
-               inherit: "default" 0.0;
-            }
-            description { state: "scale" 0.0;
-               inherit: "default" 0.0;
-            }
-            description { state: "edje" 0.0;
-               inherit: "default" 0.0;
-            }
-            description { state: "movie" 0.0;
-               inherit: "default" 0.0;
-            }
-         }
-         program {
-            signal: "media,off"; source: "terminology";
-            action: STATE_SET "default" 0.0;
-            target: "terminology.background";
-         }
-         program {
-            signal: "media,image"; source: "terminology";
-            action: STATE_SET "image" 0.0;
-            target: "terminology.background";
-         }
-         program {
-            signal: "media,scale"; source: "terminology";
-            action: STATE_SET "scale" 0.0;
-            target: "terminology.background";
-         }
-         program {
-            signal: "media,edje"; source: "terminology";
-            action: STATE_SET "edje" 0.0;
-            target: "terminology.background";
-         }
-         program {
-            signal: "media,movie"; source: "terminology";
-            action: STATE_SET "movie" 0.0;
-            target: "terminology.background";
-         }
-         
-         ////////////////////////////////////////////////////////////////////
-         // actual text grid for chars, cursors, selectiond etc. goes here
-         part { name: "terminology.content"; type: SWALLOW;
-            description { state: "default" 0.0;
-               rel1.offset: 1 1;
-               rel2.offset: -2 -2;
-            }
-         }
-      }
-   }
-         
+
+
    //// the background and general container for the terminal
    group { name: "terminology/background";
       images {
@@ -572,8 +495,7 @@ collections {
             target: "bell_anim";
             after: "bell_anim";
          }
-         program {
-            name: "bell_anim";
+         program { name: "bell_anim";
             signal: "bell"; source: "terminology";
             action: STATE_SET "animate" 0.0;
             transition: LINEAR 0.8;
@@ -879,6 +801,84 @@ collections {
             target: "popmedia_glint";
             target: "popmedia_glintclip";
             target: "popmedia_shine";
+         }
+      }
+   }
+   
+//////////////////////////////////////////////////////////////////////////////
+   //// the background and general container for the terminal
+   group { name: "terminology/core";
+      parts {
+         ////////////////////////////////////////////////////////////////////
+         // background handling
+         part { name: "fade"; type: RECT;
+            description { state: "default" 0.0;
+            }
+            description { state: "translucent" 0.0;
+               inherit: "default" 0.0;
+               color: 255 255 255 128;
+            }
+         }
+         program {
+            signal: "translucent,on"; source: "terminology";
+            action: STATE_SET "translucent" 0.0;
+            target: "fade";
+         }
+         program {
+            signal: "translucent,off"; source: "terminology";
+            action: STATE_SET "default" 0.0;
+            target: "fade";
+         }
+         part { name: "terminology.background"; type: SWALLOW;
+            clip_to: "fade";
+            description { state: "default" 0.0;
+            }
+            description { state: "image" 0.0;
+               inherit: "default" 0.0;
+            }
+            description { state: "scale" 0.0;
+               inherit: "default" 0.0;
+            }
+            description { state: "edje" 0.0;
+               inherit: "default" 0.0;
+            }
+            description { state: "movie" 0.0;
+               inherit: "default" 0.0;
+            }
+         }
+         program {
+            signal: "media,off"; source: "terminology";
+            action: STATE_SET "default" 0.0;
+            target: "terminology.background";
+         }
+         program {
+            signal: "media,image"; source: "terminology";
+            action: STATE_SET "image" 0.0;
+            target: "terminology.background";
+         }
+         program {
+            signal: "media,scale"; source: "terminology";
+            action: STATE_SET "scale" 0.0;
+            target: "terminology.background";
+         }
+         program {
+            signal: "media,edje"; source: "terminology";
+            action: STATE_SET "edje" 0.0;
+            target: "terminology.background";
+         }
+         program {
+            signal: "media,movie"; source: "terminology";
+            action: STATE_SET "movie" 0.0;
+            target: "terminology.background";
+         }
+         
+         ////////////////////////////////////////////////////////////////////
+         // actual text grid for chars, cursors, selectiond etc. goes here
+         part { name: "terminology.content"; type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.offset: 1 1;
+               rel2.offset: -2 -2;
+            }
          }
       }
    }

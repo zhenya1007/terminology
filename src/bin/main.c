@@ -3059,6 +3059,7 @@ remote:
 
    config_del(main_config);
    config_shutdown();
+   config_del(config);
    eina_log_domain_unregister(_log_domain);
    _log_domain = -1;
 

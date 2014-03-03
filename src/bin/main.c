@@ -2704,6 +2704,7 @@ elm_main(int argc, char **argv)
    elm_app_info_set(elm_main, "terminology", "themes/default.edj");
 
    config_init();
+   options_ssh_init();
 
    main_config = config_load("config");
    
@@ -3058,6 +3059,7 @@ remote:
    termpty_shutdown();
 
    config_del(main_config);
+   options_ssh_shutdown();
    config_shutdown();
    eina_log_domain_unregister(_log_domain);
    _log_domain = -1;

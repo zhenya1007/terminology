@@ -8,7 +8,7 @@
 #include "main.h"
 
 static Evas_Object *ct_frame = NULL, *ct_boxh = NULL, *ct_box = NULL;
-static Evas_Object *ct_box2 = NULL, *ct_over = NULL;
+static Evas_Object *ct_box2 = NULL, *ct_boxssh = NULL, *ct_over = NULL;
 static Eina_Bool ct_out = EINA_FALSE;
 static Ecore_Timer *ct_del_timer = NULL;
 static Evas_Object *ct_win = NULL, *ct_bg = NULL, *ct_term = NULL;
@@ -240,9 +240,13 @@ controls_toggle(Evas_Object *win, Evas_Object *bg, Evas_Object *term,
         evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
         elm_object_text_set(o, "Controls");
 
+        ct_boxssh = o = elm_box_add(win);
+        elm_object_content_set(ct_frame, o);
+        evas_object_show(o);
+
         ct_boxh = o = elm_box_add(win);
         elm_box_horizontal_set(o, EINA_TRUE);
-        elm_object_content_set(ct_frame, o);
+        elm_box_pack_end(ct_boxssh, o);
         evas_object_show(o);
 
         ct_box2 = o = elm_box_add(win);
@@ -292,6 +296,19 @@ controls_toggle(Evas_Object *win, Evas_Object *bg, Evas_Object *term,
         
         o = _button_add(win, "About", "about", _cb_ct_about, NULL);
         elm_box_pack_end(ct_box, o);
+
+        o = _sep_add_h(win);
+        elm_box_pack_end(ct_boxssh, o);
+
+        o = elm_genlist_add(win);
+        evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+        evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
+        evas_object_size_hint_request_set(o, 64, 64);
+        elm_genlist_mode_set(o, ELM_LIST_COMPRESS);
+        elm_genlist_homogeneous_set(o, EINA_TRUE);
+        elm_box_pack_end(ct_boxssh, o);
+        evas_object_show(o);
+        options_genlist_add(o);
 
         evas_object_event_callback_add(ct_frame, EVAS_CALLBACK_DEL,
                                        _cb_frame_del, NULL);

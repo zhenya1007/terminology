@@ -10,6 +10,7 @@
 #include "options_behavior.h"
 #include "options_keys.h"
 #include "options_helpers.h"
+#include "options_ssh.h"
 #include "config.h"
 #include "termio.h"
 

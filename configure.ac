@@ -53,6 +53,16 @@ PKG_CHECK_MODULES([ELDBUS],
                    [have_eldbus="no"]
                    )
 
+PKG_CHECK_MODULES([AVAHI],
+                  [avahi-client ecore-avahi],
+                  [
+                   AC_DEFINE(HAVE_AVAHI, 1, [Avahi support])
+                   have_avahi="yes"
+                  ],
+                  [
+                   have_avahi="no"
+                  ])
+
 AC_CHECK_FUNCS(mkstemps)
 
 EFL_WITH_BIN([edje], [edje-cc], [edje_cc])
@@ -114,4 +124,5 @@ echo "  prefix...................: $prefix"
 echo
 echo "Features:"
 echo "  dbus................: $have_eldbus"
+echo "  avahi...............: $have_avahi"
 echo

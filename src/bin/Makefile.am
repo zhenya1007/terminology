@@ -5,9 +5,9 @@ bin_PROGRAMS = terminology tybg tyalpha typop tyq tycat tyls
 
 terminology_CPPFLAGS = -I. \
 -DPACKAGE_BIN_DIR=\"$(bindir)\" -DPACKAGE_LIB_DIR=\"$(libdir)\" \
--DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" @TERMINOLOGY_CFLAGS@
+-DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" @TERMINOLOGY_CFLAGS@ @AVAHI_CFLAGS@
 
-terminology_LDADD = @TERMINOLOGY_LIBS@ @ELDBUS_LIBS@
+terminology_LDADD = @TERMINOLOGY_LIBS@ @ELDBUS_LIBS@ @AVAHI_LIBS@
 
 terminology_SOURCES = \
 private.h \
@@ -20,6 +20,7 @@ keyin.c keyin.h \
 main.c main.h \
 media.c media.h \
 options.c options.h \
+options_ssh.h options_ssh.c \
 options_font.c options_font.h \
 options_theme.c options_theme.h \
 options_themepv.c options_themepv.h \

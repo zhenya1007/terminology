@@ -34,6 +34,7 @@ struct _Term_Container {
      Term_Container *parent;
      Win *wn;
      Evas_Object *selector_img;
+     int missed_bell;
      const char *title;
 
      Term *(*term_next)(Term_Container *tc, Term_Container *child);
@@ -48,6 +49,7 @@ struct _Term_Container {
                      Term_Container *new_child);
      void (*focus)(Term_Container *tc, Term_Container *relative);
      void (*set_title)(Term_Container *tc, Term_Container *child, const char *title);
+     void (*bell)(Term_Container *tc, Term_Container *child);
      void (*close)(Term_Container *container, Term_Container *child,
                    Eina_Bool refocus);
 };

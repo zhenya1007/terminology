@@ -66,8 +66,9 @@ struct _Solo {
 typedef struct _Tab_Item Tab_Item;
 struct _Tab_Item {
      Term_Container *tc;
+     Evas_Object *obj;
      Elm_Object_Item *elm_item;
-     Elm_Object_Item *separator;
+     Elm_Object_Item *sep;
      void *selector_entry;
 };
 
@@ -415,6 +416,13 @@ _solo_set_title(Term_Container *tc, Term_Container *child EINA_UNUSED,
 }
 
 static void
+_solo_bell(Term_Container *tc EINA_UNUSED, Term_Container *child EINA_UNUSED)
+{
+   /* TODO: boris */
+}
+
+
+static void
 _solo_focus(Term_Container *tc, Term_Container *relative EINA_UNUSED)
 {
    Solo *solo;
@@ -456,6 +464,7 @@ _solo_new(Term *term, Win *wn)
    tc->swallow = NULL;
    tc->focus = _solo_focus;
    tc->set_title = _solo_set_title;
+   tc->bell = _solo_bell;
    tc->close= _solo_close;
 
    DBG("tc:%p", tc);
@@ -807,6 +816,11 @@ _win_focus(Term_Container *tc, Term_Container *child EINA_UNUSED)
    wn->focused = EINA_TRUE;
    /* TODO: go down? */
 }
+static void
+_win_bell(Term_Container *tc EINA_UNUSED, Term_Container *child EINA_UNUSED)
+{
+   /* TODO: boris */
+}
 
 static void
 _win_set_title(Term_Container *tc, Term_Container *child EINA_UNUSED,
@@ -857,6 +871,7 @@ win_new(const char *name, const char *role, const char *title,
    tc->swallow = _win_swallow;
    tc->focus = _win_focus;
    tc->set_title = _win_set_title;
+   tc->bell = _win_bell;
    tc->close = _win_close;
    tc->type = TERM_CONTAINER_TYPE_WIN;
 
@@ -1285,6 +1300,7 @@ _split_focus(Term_Container *tc, Term_Container *relative)
    assert (tc->type == TERM_CONTAINER_TYPE_SPLIT);
    split = (Split*) tc;
 
+   tc->missed_bell = 0;
 
    if (tc->parent == relative)
      {
@@ -1319,6 +1335,17 @@ _split_set_title(Term_Container *tc, Term_Container *child,
      }
 }
 
+static void
+_split_bell(Term_Container *tc, Term_Container *child)
+{
+   assert (tc->type == TERM_CONTAINER_TYPE_SPLIT);
+
+   DBG("bell: self:%p child:%p", tc, child);
+   tc->missed_bell++;
+
+   tc->parent->bell(tc->parent, tc);
+}
+
 static Term_Container *
 _split_new(Term_Container *tc1, Term_Container *tc2, Eina_Bool is_horizontal)
 {
@@ -1343,6 +1370,7 @@ _split_new(Term_Container *tc1, Term_Container *tc2, Eina_Bool is_horizontal)
    tc->swallow = _split_swallow;
    tc->focus = _split_focus;
    tc->set_title = _split_set_title;
+   tc->bell = _split_bell;
    tc->close = _split_close;
 
    tc->parent = NULL;
@@ -2017,27 +2045,6 @@ _tabs_selector_cb_selected(void *data,
      }
 
    DBG("FAIL");
-#if 0
-   Split *sp = data;
-   Eina_List *l;
-   Term *tm;
-
-   EINA_LIST_FOREACH(sp->terms, l, tm)
-     {
-        if (tm->sel == info)
-          {
-             _term_focus(tm);
-             _term_focus_show(sp, tm);
-             _sel_restore(sp);
-             _term_miniview_check(tm);
-             return;
-          }
-     }
-   _sel_restore(sp);
-   _term_focus(sp->term);
-   _term_focus_show(sp, sp->term);
-   _term_miniview_check(tm);
-#endif
 }
 
 static void
@@ -2057,12 +2064,8 @@ _tabs_selector_cb_ending(void *data,
                          void *info EINA_UNUSED)
 {
    Tabs *tabs = data;
-   /* TODO: boris */
+   /* TODO */
    DBG("ending: %p", tabs);
-#if 0
-   Split *sp = data;
-   edje_object_signal_emit(sp->sel_bg, "end", "terminology");
-#endif
 }
 
 
@@ -2308,7 +2311,8 @@ _tabs_close(Term_Container *tc, Term_Container *child,
 
 
         elm_object_item_del(tab_item->elm_item);
-        elm_object_item_del(tab_item->separator);
+        evas_object_del(tab_item->obj);
+        elm_object_item_del(tab_item->sep);
         tabs->tabs = eina_list_remove_list(tabs->tabs, l);
         free(tab_item);
      }
@@ -2468,16 +2472,32 @@ tab_item_new(Tabs *tabs, Term_Container *child)
 {
    Elm_Object_Item *toolbar_item;
    Tab_Item *tab_item;
+   Term_Container *tc = (Term_Container*) tabs;
+   Win *wn = tc->wn;
+   Evas_Object *o;
 
    tab_item = calloc(1, sizeof(Tab_Item));
    tab_item->tc = child;
    assert(child != NULL);
 
+   tab_item->obj = o = edje_object_add(evas_object_evas_get(wn->win));
+   theme_apply(o, wn->config, "terminology/tab");
+
+   /* TODO: boris */
+   edje_object_part_text_set(o, "terminology.tabmissed.label", "42");
+   edje_object_part_text_set(o, "terminology.tabtitle.label", "Terminology");
+   evas_object_show(o);
+
    toolbar_item = elm_toolbar_item_append(tabs->tabbar,
-                                          NULL, "Terminology",
+                                          NULL, NULL,
                                           _tab_selected, tab_item);
+
+   elm_object_item_part_content_set(toolbar_item, "object", o);
    elm_toolbar_item_priority_set(toolbar_item, 1);
    tab_item->elm_item = toolbar_item;
+
+   tab_item->sep = elm_toolbar_item_append(tabs->tabbar, NULL, NULL, NULL, NULL);
+   elm_toolbar_item_separator_set(tab_item->sep, EINA_TRUE);
 
    tabs->tabs = eina_list_append(tabs->tabs, tab_item);
 
@@ -2601,6 +2621,12 @@ _tabs_focus(Term_Container *tc, Term_Container *relative)
 }
 
 static void
+_tabs_bell(Term_Container *tc EINA_UNUSED, Term_Container *child EINA_UNUSED)
+{
+    /* TODO: boris */
+}
+
+static void
 _tabs_set_title(Term_Container *tc, Term_Container *child,
                 const char *title)
 {
@@ -2615,7 +2641,7 @@ _tabs_set_title(Term_Container *tc, Term_Container *child,
    assert(l);
    tab_item = l->data;
 
-   elm_object_item_part_text_set(tab_item->elm_item, "elm.text", title);
+   edje_object_part_text_set(tab_item->obj, "terminology.tabtitle.label", title);
 
    DBG("set title: '%s' child:%p current->tc:%p",
        title, child, tabs->current->tc);
@@ -2661,6 +2687,7 @@ _tabs_new(Term_Container *child, Term_Container *parent)
    tc->swallow = _tabs_swallow;
    tc->focus = _tabs_focus;
    tc->set_title = _tabs_set_title;
+   tc->bell = _tabs_bell;
    tc->close= _tabs_close;
    tc->type = TERM_CONTAINER_TYPE_TABS;
 
@@ -3845,12 +3872,16 @@ static void
 _cb_bell(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
    Term *term = data;
-   Config *config = termio_config_get(term->termio);
+   Term_Container *tc;
 
-   if (!config) return;
+   tc = term->container;
+
+   if (!term->focused)
+     tc->bell(tc, tc);
+
+#if 0
    if (!config->disable_visual_bell)
      {
-#if 0
         Split *sp;
 
         edje_object_signal_emit(term->bg, "bell", "terminology");
@@ -3869,12 +3900,12 @@ _cb_bell(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
                   _split_tabcount_update(sp, sp->term);
                }
           }
-#endif
      }
    if (config->urg_bell)
      {
         if (!term->wn->focused) elm_win_urgent_set(term->wn->win, EINA_TRUE);
      }
+#endif
 }
 
 

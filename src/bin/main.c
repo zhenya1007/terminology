@@ -440,6 +440,44 @@ _translate_options(void)
 }
 #endif
 
+#ifdef ELM_COLOR_CLASS_H
+# if defined(HAVE_GETTEXT) && defined(ENABLE_NLS)
+static char *
+colorclasses_name_cb(char *name)
+{
+   return _(name);
+}
+#endif
+
+static Eina_List *
+colorclasses_list_cb(void)
+{
+   Eina_List *l, *ret = NULL;
+   Eina_Iterator *it;
+   Eina_File *f;
+   const char *config_dir = efreet_config_home_get(),
+              *data_dir = elm_app_data_dir_get();
+   char buf[PATH_MAX], buf2[PATH_MAX];
+
+   it = edje_file_iterator_new();
+   if (!it) return NULL;
+   snprintf(buf, sizeof(buf), "%s/themes", data_dir);
+   snprintf(buf2, sizeof(buf2), "%s/terminology/themes", config_dir);
+   EINA_ITERATOR_FOREACH(it, f)
+     {
+        const char *name;
+
+        name = eina_file_filename_get(f);
+        if ((!strstr(name, buf)) && (!strstr(name, buf2))) continue;
+        l = elm_color_class_util_edje_file_list(f);
+        if (l)
+          ret = eina_list_merge(ret, l);
+     }
+   eina_iterator_free(it);
+   return ret;
+}
+#endif
+
 EAPI_MAIN int
 elm_main(int argc, char **argv)
 {
@@ -540,6 +578,9 @@ elm_main(int argc, char **argv)
    bindtextdomain(PACKAGE, elm_app_locale_dir_get());
    textdomain(PACKAGE);
    _translate_options();
+# ifdef ELM_COLOR_CLASS_H
+   elm_color_class_translate_cb_set(colorclasses_name_cb);
+# endif
 #else
    options.copyright = "(C) 2012-2015 Carsten Haitzler and others";
 #endif
@@ -575,7 +616,9 @@ elm_main(int argc, char **argv)
      }
 
    if (quit_option) goto end;
-
+#ifdef ELM_COLOR_CLASS_H
+   elm_color_class_list_cb_set(colorclasses_list_cb);
+#endif
 #if (ECORE_VERSION_MAJOR > 1) || (ECORE_VERSION_MINOR >= 8)
    if (cmd_options)
      {

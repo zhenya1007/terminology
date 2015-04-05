@@ -287,3 +287,25 @@ options_colors(Evas_Object *opbox, Evas_Object *term)
    evas_object_show(o);
    evas_object_smart_callback_add(o, "clicked", _cb_op_reset, term);
 }
+
+#ifdef ELM_COLOR_CLASS_H
+void
+options_colorclasses(Evas_Object *opbox, Evas_Object *term EINA_UNUSED)
+{
+   Evas_Object *o, *fr;
+
+   fr = o = elm_frame_add(opbox);
+   evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   elm_object_text_set(o, _("Color Classes"));
+   elm_box_pack_end(opbox, o);
+   evas_object_show(o);
+
+   o = elm_color_class_editor_add(opbox, 0);
+   evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   elm_object_text_set(o, _("Color Classes"));
+   elm_object_content_set(fr, o);
+   evas_object_show(o);
+}
+#endif

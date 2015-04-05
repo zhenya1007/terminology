@@ -30,6 +30,9 @@ static enum option_mode {
      OPTION_THEME,
      OPTION_WALLPAPER,
      OPTION_COLORS,
+#ifdef ELM_COLOR_CLASS_H
+     OPTION_COLORCLASSES,
+#endif
      OPTION_VIDEO,
      OPTION_BEHAVIOR,
      OPTION_KEYS,
@@ -86,6 +89,9 @@ _cb_opdt_hide_done(void *data, Evas_Object *obj EINA_UNUSED, const char *sig EIN
       case OPTION_THEME:     options_theme(op_opbox, data); break;
       case OPTION_WALLPAPER: options_wallpaper(op_opbox, data); break;
       case OPTION_COLORS:    options_colors(op_opbox, data); break;
+#ifdef ELM_COLOR_CLASS_H
+      case OPTION_COLORCLASSES:    options_colorclasses(op_opbox, data); break;
+#endif
       case OPTION_VIDEO:     options_video(op_opbox, data); break;
       case OPTION_BEHAVIOR:  options_behavior(op_opbox, data); break;
       case OPTION_KEYS:      options_keys(op_opbox, data); break;
@@ -168,6 +174,9 @@ options_toggle(Evas_Object *win, Evas_Object *bg, Evas_Object *term,
         ITEM_APPEND("preferences-desktop-wallpaper", _("Wallpaper"), WALLPAPER);
         ITEM_APPEND("video-display", _("Video"), VIDEO);
         ITEM_APPEND("preferences-desktop-theme", _("Colors"), COLORS);
+#ifdef ELM_COLOR_CLASS_H
+        ITEM_APPEND("preferences-desktop-theme", _("Color Classes"), COLORCLASSES);
+#endif
         ITEM_APPEND("preferences-system", _("Behavior"), BEHAVIOR);
         ITEM_APPEND("preferences-desktop-keyboard-shortcuts", _("Keys"), KEYS);
         ITEM_APPEND("system-run", _("Helpers"), HELPERS);

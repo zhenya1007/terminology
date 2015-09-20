@@ -2802,7 +2802,7 @@ _codepoint_is_wordsep(const Eina_Unicode g)
 }
 
 static Eina_Bool
-_to_trim(Eina_Unicode codepoint)
+_to_trim(Eina_Unicode codepoint, Eina_Bool right_trim)
 {
    static const Eina_Unicode trim_chars[] =
      {
@@ -2813,6 +2813,8 @@ _to_trim(Eina_Unicode codepoint)
      };
    size_t i = 0, len;
    len = sizeof(trim_chars)/sizeof((trim_chars)[0]);
+   if (right_trim)
+     len--; /* do not right trim . */
 
    for (i = 0; i < len; i++)
      if (codepoint == trim_chars[i])
@@ -2836,7 +2838,7 @@ _trim_sel_word(Termio *sd)
      {
         cells = termpty_cellrow_get(pty, y, &w);
 
-        while (start < w && _to_trim(cells[start].codepoint))
+        while (start < w && _to_trim(cells[start].codepoint, EINA_TRUE))
           start++;
 
         if (start < w)
@@ -2864,7 +2866,7 @@ _trim_sel_word(Termio *sd)
      {
         cells = termpty_cellrow_get(pty, y, &w);
 
-        while (end >= 0 && _to_trim(cells[end].codepoint))
+        while (end >= 0 && _to_trim(cells[end].codepoint, EINA_FALSE))
           end--;
 
         if (end >= 0)

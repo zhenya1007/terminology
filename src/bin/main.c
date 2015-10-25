@@ -437,6 +437,40 @@ _translate_options(void)
 }
 #endif
 
+#include <syslog.h>
+static void
+_my_log_cb(const Eina_Log_Domain *d,
+           Eina_Log_Level level,
+           const char *file,
+           const char *fnc,
+           int line,
+           const char *fmt,
+           void *data,
+           va_list args)
+{
+    int priority;
+    switch (level) {
+     case EINA_LOG_LEVEL_CRITICAL:
+        priority = LOG_CRIT;
+        break;
+     case EINA_LOG_LEVEL_ERR:
+        priority = LOG_ERR;
+        break;
+     case EINA_LOG_LEVEL_WARN:
+        priority = LOG_WARNING;
+        break;
+     case EINA_LOG_LEVEL_INFO:
+        priority = LOG_INFO;
+        break;
+     case EINA_LOG_LEVEL_DBG:
+        priority = LOG_DEBUG;
+        break;
+     default:
+        priority = level + LOG_CRIT;
+    }
+    vsyslog(priority, fmt, args);
+}
+
 EAPI_MAIN int
 elm_main(int argc, char **argv)
 {

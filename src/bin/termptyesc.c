@@ -1506,7 +1506,7 @@ _handle_esc_terminology(Termpty *ty, const Eina_Unicode *c, const Eina_Unicode *
    // commands are stored in the buffer, 0 bytes not allowed (end marker)
    cmd = eina_unicode_unicode_to_utf8(buf, NULL);
    ty->cur_cmd = cmd;
-   if ((!config->ty_escapes) || (!_termpty_ext_handle(ty, cmd, buf)))
+   if ((config->ty_escapes) && (!_termpty_ext_handle(ty, cmd, buf)))
      {
         if (ty->cb.command.func) ty->cb.command.func(ty->cb.command.data);
      }

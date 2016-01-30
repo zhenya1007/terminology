@@ -10,7 +10,7 @@
 int
 main(int argc, char **argv)
 {
-   int i;
+   int i, bytes;
 
    ON_NOT_RUNNING_IN_TERMINOLOGY_EXIT_1();
 
@@ -28,8 +28,9 @@ main(int argc, char **argv)
 
         path = argv[i];
         if (realpath(path, buf)) path = buf;
-        snprintf(tbuf, sizeof(tbuf), "%c}pn%s", 0x1b, path);
-        if (write(0, tbuf, strlen(tbuf) + 1) != (signed)(strlen(tbuf) + 1)) perror("write");
+        bytes = snprintf(tbuf, sizeof(tbuf), "%c}pn%s", 0x1b, path);
+        bytes++;
+        if (write(STDIN_FILENO, tbuf, bytes) != bytes) perror("write");
      }
    return 0;
 }

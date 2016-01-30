@@ -11,6 +11,7 @@ int
 main(int argc, char **argv)
 {
    int i, perm = 0;
+   int bytes;
 
    ON_NOT_RUNNING_IN_TERMINOLOGY_EXIT_1();
 
@@ -34,10 +35,11 @@ main(int argc, char **argv)
              if (i >= argc) break;
           }
         if (perm)
-          snprintf(tbuf, sizeof(tbuf), "%c}ap%s", 0x1b, argv[i]);
+          bytes = snprintf(tbuf, sizeof(tbuf), "%c}ap%s", 0x1b, argv[i]);
         else
-          snprintf(tbuf, sizeof(tbuf), "%c}at%s", 0x1b, argv[i]);
-        if (write(STDIN_FILENO, tbuf, strlen(tbuf) + 1) != (signed)(strlen(tbuf) + 1)) perror("write");
+          bytes = snprintf(tbuf, sizeof(tbuf), "%c}at%s", 0x1b, argv[i]);
+        bytes++;
+        if (write(STDIN_FILENO, tbuf, bytes) != bytes) perror("write");
      }
    return 0;
 }

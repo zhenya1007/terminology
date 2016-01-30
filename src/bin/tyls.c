@@ -759,9 +759,9 @@ main(int argc, char **argv)
         
         evas = ecore_evas_get(ee);
         echo_off();
-        snprintf(buf, sizeof(buf), "%c}qs", 0x1b);
-        len = strlen(buf);
-        if (write(STDIN_FILENO, buf, len + 1) < (signed)len + 1) perror("write");
+        len = snprintf(buf, sizeof(buf), "%c}qs", 0x1b);
+        len++;
+        if (write(STDIN_FILENO, buf, len) < len) perror("write");
         if ((scanf("%i;%i;%i;%i", &tw, &th, &cw, &ch) != 4)
             || (tw <= 0) || (th <= 0) || (cw <= 1) || (ch <= 1))
           {

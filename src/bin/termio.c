@@ -3637,30 +3637,32 @@ _rep_mouse_down(Termio *sd, Evas_Event_Mouse_Down *ev, int cx, int cy)
                    buf[i++] = 0x80 + (v & 0x3f);
                }
              buf[i] = 0;
-             termpty_write(sd->pty, buf, strlen(buf));
+             termpty_write(sd->pty, buf, i);
              ret = EINA_TRUE;
           }
         break;
       case MOUSE_EXT_SGR: // ESC.[.<.NUM.;.NUM.;.NUM.M
           {
              int meta = evas_key_modifier_is_set(ev->modifiers, "Alt") ? 8 : 0;
+             int len;
 
              if (btn > 2) btn = 0;
-             snprintf(buf, sizeof(buf), "%c[<%i;%i;%iM", 0x1b,
-                      (btn | meta), cx + 1, cy + 1);
-             termpty_write(sd->pty, buf, strlen(buf));
+             len = snprintf(buf, sizeof(buf), "%c[<%i;%i;%iM", 0x1b,
+                            (btn | meta), cx + 1, cy + 1);
+             termpty_write(sd->pty, buf, len);
              ret = EINA_TRUE;
           }
         break;
       case MOUSE_EXT_URXVT: // ESC.[.NUM.;.NUM.;.NUM.M
           {
              int meta = evas_key_modifier_is_set(ev->modifiers, "Alt") ? 8 : 0;
+             int len;
 
              if (btn > 2) btn = 0;
-             snprintf(buf, sizeof(buf), "%c[%i;%i;%iM", 0x1b,
-                      (btn | meta) + ' ',
-                      cx + 1, cy + 1);
-             termpty_write(sd->pty, buf, strlen(buf));
+             len = snprintf(buf, sizeof(buf), "%c[%i;%i;%iM", 0x1b,
+                            (btn | meta) + ' ',
+                            cx + 1, cy + 1);
+             termpty_write(sd->pty, buf, len);
              ret = EINA_TRUE;
           }
         break;
@@ -5547,10 +5549,11 @@ _smart_pty_command(void *data)
         if (ty->cur_cmd[1] == 's')
           {
              char buf[256];
+             int len;
 
-             snprintf(buf, sizeof(buf), "%i;%i;%i;%i\n",
-                      sd->grid.w, sd->grid.h, sd->font.chw, sd->font.chh);
-             termpty_write(ty, buf, strlen(buf));
+             len = snprintf(buf, sizeof(buf), "%i;%i;%i;%i\n",
+                            sd->grid.w, sd->grid.h, sd->font.chw, sd->font.chh);
+             termpty_write(ty, buf, len);
              return;
           }
         else if (ty->cur_cmd[1] == 'j')
@@ -5790,10 +5793,11 @@ _smart_pty_command(void *data)
         if (ty->cur_cmd[1] == 's')
           {
              char buf[256];
+             int len;
 
-             snprintf(buf, sizeof(buf), "%i;%i;%i;%i\n",
-                      sd->grid.w, sd->grid.h, sd->font.chw, sd->font.chh);
-             termpty_write(ty, buf, strlen(buf));
+             len = snprintf(buf, sizeof(buf), "%i;%i;%i;%i\n",
+                            sd->grid.w, sd->grid.h, sd->font.chw, sd->font.chh);
+             termpty_write(ty, buf, len);
              return;
           }
         else if (ty->cur_cmd[1] == 'j')
@@ -5867,7 +5871,7 @@ _smart_cb_drop(void *data, Evas_Object *o EINA_UNUSED, Elm_Selection_Data *ev)
           {
              char *p, *p2, *p3, *tb;
 
-             tb = malloc(strlen(ev->data) + 1);
+             tb = malloc(ev->len + 1);
              if (tb)
                {
                   for (p = ev->data; p;)

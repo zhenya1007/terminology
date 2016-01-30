@@ -86,17 +86,18 @@ prnt(const char *path, int w, int h, int mode)
 {
    int x, y, i;
    char *line, buf[4096];
+   int bytes;
 
    if ((w >= 512) || (h >= 512)) return;
    line = malloc(w + 100);
    if (!line) return;
    if (mode == CENTER)
-     snprintf(buf, sizeof(buf), "%c}ic#%i;%i;%s", 0x1b, w, h, path);
+     bytes = snprintf(buf, sizeof(buf), "%c}ic#%i;%i;%s", 0x1b, w, h, path);
    else if (mode == FILL)
-     snprintf(buf, sizeof(buf), "%c}if#%i;%i;%s", 0x1b, w, h, path);
+     bytes = snprintf(buf, sizeof(buf), "%c}if#%i;%i;%s", 0x1b, w, h, path);
    else
-     snprintf(buf, sizeof(buf), "%c}is#%i;%i;%s", 0x1b, w, h, path);
-   if (write(0, buf, strlen(buf) + 1) < 0) perror("write");
+     bytes = snprintf(buf, sizeof(buf), "%c}is#%i;%i;%s", 0x1b, w, h, path);
+   if (write(0, buf, bytes + 1) < 0) perror("write");
    i = 0;
    line[i++] = 0x1b;
    line[i++] = '}';
@@ -309,6 +310,7 @@ main(int argc, char **argv)
    int i;
    char *rp;
    Eina_List *file_q = NULL;
+   int bytes;
 
    ON_NOT_RUNNING_IN_TERMINOLOGY_EXIT_1();
 
@@ -333,8 +335,8 @@ main(int argc, char **argv)
    if (!ee) goto shutdown;
    evas = ecore_evas_get(ee);
    echo_off();
-   snprintf(buf, sizeof(buf), "%c}qs", 0x1b);
-   if (write(0, buf, strlen(buf) + 1) < 0) perror("write");
+   bytes = snprintf(buf, sizeof(buf), "%c}qs", 0x1b);
+   if (write(0, buf, bytes + 1) < 0) perror("write");
    if (scanf("%i;%i;%i;%i", &tw, &th, &cw, &ch) != 4 ||
        ((tw <= 0) || (th <= 0) || (cw <= 1) || (ch <= 1)))
      {

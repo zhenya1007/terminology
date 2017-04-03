@@ -874,6 +874,16 @@ remote:
         if (ipc_instance_add(&inst))
           goto end;
      }
+   else
+     {
+        if (!cd)
+          {
+             char buf[PATH_MAX];
+             getcwd(buf, sizeof(buf));
+
+             cd = strdup(buf);
+          }
+     }
    if ((!single) && (config->multi_instance))
      {
         ipc_instance_new_func_set(main_ipc_new);

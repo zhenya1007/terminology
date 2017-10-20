@@ -650,6 +650,102 @@ static const Tty_Key tty_keys[] = {
   },
 },
 {
+  "period",
+  sizeof("period") - 1,
+  {
+    KH("."), // default period
+    KH("\033."), // default Alt+period
+    KH("\x1e"), // default Ctrl+period
+    KH("\x9e"), // default Ctrl+Alt+period
+    KH(">"), // default Shift+period
+    KH("\033>"), // default Shift+Alt+period
+    KH("\x1e"), // default Shift+Ctrl+period
+    KH("\033\x1e"), // default Shift+Ctrl+Alt+period
+  },
+  {
+    KH("."), // cursor period
+    KH("\033."), // cursor Alt+period
+    KH("\x1e"), // cursor Ctrl+period
+    KH("\033\x1e"), // cursor Ctrl+Alt+period
+    KH(">"), // cursor Shift+period
+    KH("\033>"), // cursor Shift+Alt+period
+    KH("\x1e"), // cursor Shift+Ctrl+period
+    KH("\033\x1e"), // cursor Shift+Ctrl+Alt+period
+  },
+},
+{
+  "comma",
+  sizeof("comma") - 1,
+  {
+    KH(","), // default comma
+    KH("\033,"), // default Alt+comma
+    KH("\x1f"), // default Ctrl+comma
+    KH("\x9f"), // default Ctrl+Alt+comma
+    KH("<"), // default Shift+comma
+    KH("\033<"), // default Shift+Alt+comma
+    KH("\x1f"), // default Shift+Ctrl+comma
+    KH("\x9f"), // default Shift+Ctrl+Alt+comma
+  },
+{
+    KH(","), // cursor comma
+    KH("\033,"), // cursor Alt+comma
+    KH("\x1f"), // cursor Ctrl+comma
+    KH("\x9f"), // cursor Ctrl+Alt+comma
+    KH("<"), // cursor Shift+comma
+    KH("\033<"), // cursor Shift+Alt+comma
+    KH("\x1f"), // cursor Shift+Ctrl+comma
+    KH("\x9f"), // cursor Shift+Ctrl+Alt+comma
+  },
+},
+{
+  "m",
+  sizeof("m") - 1,
+  {
+    KH("m"), // default m
+    KH("\033m"), // default Alt+m
+    KH("\x1c"), // default Ctrl+m
+    KH("\x9c"), // default Ctrl+Alt+m
+    KH("M"), // default Shift+m
+    KH("\033M"), // default Shift+Alt+m
+    KH("\x1c"), // default Shift+Ctrl+m
+    KH("\x9c"), // default Shift+Ctrl+Alt+m
+  },
+{
+    KH("m"), // cursor m
+    KH("\033m"), // cursor Alt+m
+    KH("\x1c"), // cursor Ctrl+m
+    KH("\x9c"), // cursor Ctrl+Alt+m
+    KH("M"), // cursor Shift+m
+    KH("\033M"), // cursor Shift+Alt+m
+    KH("\x1c"), // cursor Shift+Ctrl+m
+    KH("\x9c"), // cursor Shift+Ctrl+Alt+m
+  },
+},
+{
+  "i",
+  sizeof("i") - 1,
+  {
+    KH("i"), // default i
+    KH("\033i"), // default Alt+i
+    KH("\x1d"), // default Ctrl+i
+    KH("\x9d"), // default Ctrl+Alt+i
+    KH("I"), // default Shift+i
+    KH("\033I"), // default Shift+Alt+i
+    KH("\x1d"), // default Shift+Ctrl+i
+    KH("\x9d"), // default Shift+Ctrl+Alt+i
+  },
+  {
+    KH("i"), // cursor i
+    KH("\033i"), // cursor Alt+i
+    KH("\x1d"), // cursor Ctrl+i
+    KH("\x9d"), // cursor Ctrl+Alt+i
+    KH("I"), // cursor Shift+i
+    KH("\033I"), // cursor Shift+Alt+i
+    KH("\x1d"), // cursor Shift+Ctrl+i
+    KH("\x9d"), // cursor Shift+Ctrl+Alt+i
+  },
+},
+{
   "Menu",
   sizeof("Menu") - 1,
   {
